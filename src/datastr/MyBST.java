@@ -22,7 +22,6 @@ public class MyBST<Ttype> {
 
 	}
 
-
 	public void add(Ttype element) throws Exception {
 		if (element == null) {
 			throw new Exception("Nepareizi ievades dati");
@@ -48,26 +47,21 @@ public class MyBST<Ttype> {
 		// veicam salīdzināšanu vai iet uz labo pusi vai uz kreiso
 		// ja jaunais elements ir lielāks
 		if (((Comparable) element).compareTo(elementCompare) > 0) {
-			if(nodeTemp.getRightChildNode() == null) {
+			if (nodeTemp.getRightChildNode() == null) {
 				MyNode newNode = new MyNode(element);
 				nodeTemp.setRightChildNode(newNode);
 				newNode.setParentNode(nodeTemp);
-			}
-			else
-			{
+			} else {
 				addHelper(element, nodeTemp.getRightChildNode());
 			}
 
-		}//javirzas uz kreiso pusi
-		else
-		{
-			if(nodeTemp.getLeftChildNode() == null) {
+		} // javirzas uz kreiso pusi
+		else {
+			if (nodeTemp.getLeftChildNode() == null) {
 				MyNode newNode = new MyNode(element);
 				nodeTemp.setLeftChildNode(newNode);
 				newNode.setParentNode(nodeTemp);
-			}
-			else
-			{
+			} else {
 				addHelper(element, nodeTemp.getLeftChildNode());
 			}
 		}
@@ -75,7 +69,7 @@ public class MyBST<Ttype> {
 
 	public void print() throws Exception {
 		if (isEmpty()) {
-			throw new Exception("Kaudze ir tukša un nav elementu, ko printēt");
+			throw new Exception("BST ir tukša un nav elementu, ko printēt");
 		}
 
 		printHelper(root);
@@ -92,9 +86,63 @@ public class MyBST<Ttype> {
 			}
 
 			if (node.getRightChildNode() != null) {
-				System.out.println("P: " + node.getElement() + "RC: " + node.getRightChildNode().getElement());
+				System.out.println("P: " + node.getElement() + " RC: " + node.getRightChildNode().getElement());
 				printHelper(node.getRightChildNode());
 			}
 		}
 	}
+
+	public boolean findElement(Ttype element) throws Exception {
+		if (element == null) {
+			throw new Exception("Nepareizi ievades dati");
+		}
+
+		if (isEmpty()) {
+			throw new Exception("BST ir tukšs un tur nevar sameklēt elemetus");
+		}
+
+		//ja ir tikai sakne kokā
+		if(howManyElements == 1) {
+			if(element.equals(root.getElement()))
+			{
+				return true;
+			}
+		}
+		else
+		{
+			return findElementHelper(element, root);
+		}
+		return false;
+	}
+
+	private boolean findElementHelper(Ttype element, MyNode nodeTemp) {
+
+		Ttype elementCompare = (Ttype) nodeTemp.getElement();
+		// ja elements ir atrasts
+		if (element.equals(elementCompare)) {
+			return true;
+		}
+
+		else {
+			// veicam salīdzināšanu vai iet uz labo pusi vai uz kreiso
+			// ja jaunais elements ir lielāks
+			if (((Comparable) element).compareTo(elementCompare) > 0) {
+				// elementam butu jabūt labajā puse, bet tur nevienas vairs un tātad elements
+				// neeksistē kokā
+				if (nodeTemp.getRightChildNode() == null) {
+					return false;
+				} else {
+					return findElementHelper(element, nodeTemp.getRightChildNode());
+				}
+			} else {
+				if (nodeTemp.getLeftChildNode() == null) {
+					return false;
+				} else {
+					return findElementHelper(element, nodeTemp.getLeftChildNode());
+				}
+			}
+		}
+
+	}
+
 }
